@@ -41,5 +41,5 @@ for html in r.html:
         cls = row.attrs.get('class', [])
         if 'danger' in cls:
             continue
-        clue = parse_clue(row)
+        clue = parse_clue(row.html)
         print(clue)
