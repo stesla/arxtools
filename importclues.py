@@ -2,7 +2,7 @@ import os
 
 from dotenv import load_dotenv
 from requests_html import HTMLSession
-from arxtools.clue import Clue, parse_clue
+from arxtools.clue import parse_clue
 
 # Get credentials from environment
 load_dotenv()
