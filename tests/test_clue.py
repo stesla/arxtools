@@ -7,7 +7,13 @@ def test_parse_shared_clue_with_note():
   <td valign="top">42</td>
   <td valign="top"><b>Clue Title</b></td>
   <td valign="top">
-    Clue Text
+    Line 1
+    <br>
+    <br>
+    Line 2
+    <br>
+    <br>
+    Line 3
     <div class="well">
       <br/>&nbsp;<br/>
       <strong>Clue Tags: </strong>foo, bar, baz
@@ -20,7 +26,7 @@ def test_parse_shared_clue_with_note():
     clue = parse_clue(html)
     assert 42 == clue.id
     assert 'Clue Title' == clue.title
-    assert 'Clue Text' == clue.text
+    assert 'Line 1\n\nLine 2\n\nLine 3' == clue.text
     assert ['foo', 'bar', 'baz'] == clue.tags
     assert 'Alice' == clue.source
     assert 'Clue Share Note' == clue.share_note

@@ -28,8 +28,18 @@ def parse_clue(html):
     tds = soup.select('td')
 
     id = int(tds[0].string)
+
     title = tds[1].string
-    text = tds[2].contents[0].strip()
+
+    text = ''
+    for child in tds[2].children:
+        if 'br' == child.name:
+            text += '\n'
+        elif 'div' == child.name:
+            pass
+        else:
+            text += child.string.strip()
+
     hastags = tds[2].find('strong')
     if hastags:
         tags = hastags.next_sibling.string.strip().split(', ')
