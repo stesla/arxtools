@@ -13,6 +13,16 @@ class Clue:
     def __repr__(self):
         return f'<Clue {self.id} "{self.title}" {self.tags}>'
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'text': self.text,
+            'tags': self.tags,
+            'source': self.source,
+            'share_note': self.share_note,
+        }
+
 def parse_clue(html):
     soup = BeautifulSoup(html, 'html.parser')
     tds = soup.select('td')

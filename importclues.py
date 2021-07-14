@@ -1,3 +1,4 @@
+import json
 import os
 
 from dotenv import load_dotenv
@@ -33,6 +34,7 @@ r = s.get(sheet_url)
 clues_url = r.html.find('a', containing='Clues')[0].absolute_links.pop()
 
 r = s.get(clues_url)
+clues = []
 for html in r.html:
     rows = html.find('tr')
     for row in rows:
@@ -42,4 +44,5 @@ for html in r.html:
         if 'danger' in cls:
             continue
         clue = parse_clue(row.html)
-        print(clue)
+        clues.append(clue.to_dict())
+print(json.dumps(clues))
