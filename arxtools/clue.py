@@ -42,7 +42,7 @@ def parse_clue(html):
 
     hastags = tds[2].find('strong')
     if hastags:
-        tags = hastags.next_sibling.string.strip().split(', ')
+        tags = [s.strip() for s in hastags.next_sibling.string.split(', ')]
     else:
         tags = []
 

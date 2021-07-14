@@ -16,7 +16,7 @@ def test_parse_shared_clue_with_note():
     Line 3
     <div class="well">
       <br/>&nbsp;<br/>
-      <strong>Clue Tags: </strong>foo, bar, baz
+      <strong>Clue Tags: </strong>foo,  bar,  baz
       <br/>&nbsp;<br/>
       This clue was shared with you by Alice, who noted: Clue Share Note
     </div>
