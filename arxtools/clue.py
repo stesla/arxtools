@@ -51,7 +51,9 @@ class Clue:
 {self.text}
 
 Source: [[{source}]]
+
 Share Note: {share_note}
+
 Tags: {taglist}
 '''
 
