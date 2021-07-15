@@ -1,4 +1,4 @@
-from arxtools.clue import parse_clue
+from arxtools.clue import Clue, parse_clue
 
 
 def test_parse_shared_clue_with_note():
@@ -82,3 +82,7 @@ def test_parse_with_no_meta_info():
     clue = parse_clue(html)
     assert clue.source is None
     assert clue.share_note is None
+
+def test_name():
+    clue = Clue(42, "Foo*#Bar\"Baz\\Quux/Foo<Bar>Baz:Quux|Foo?Bar", '', [], None, None)
+    assert '42 - Foo - Bar - Baz - Quux - Foo - Bar - Baz - Quux - Foo - Bar' == clue.name

@@ -13,6 +13,9 @@ class Clue:
     def __repr__(self):
         return f'<Clue {self.id} "{self.title}" {self.tags}>'
 
+    def from_dict(d):
+        return Clue(d['id'], d['title'], d['text'], d['tags'], d['source'], d['share_note'])
+
     def to_dict(self):
         return {
             'id': self.id,
@@ -22,6 +25,35 @@ class Clue:
             'source': self.source,
             'share_note': self.share_note,
         }
+
+    @property
+    def name(self):
+        base = f'{self.id} - {self.title}'
+        return re.sub(r'\*|\"|\\|/|<|>|:|\||\?', ' - ', base).replace('#','')
+
+    @property
+    def markdown(self):
+        if self.source is None:
+            source = 'No Source'
+        else:
+            source = self.source
+
+        if self.share_note is None:
+            share_note = 'No Share Note'
+        else:
+            share_note = self.share_note
+
+        taglist = ', '.join(f'[[{tag}]]' for tag in self.tags)
+
+        return f'''
+### Clue {self.id} - {self.title}
+
+{self.text}
+
+Source: [[{source}]]
+Share Note: {share_note}
+Tags: {taglist}
+'''
 
 def parse_clue(html):
     soup = BeautifulSoup(html, 'html.parser')
@@ -59,3 +91,21 @@ def parse_clue(html):
         source = 'investigation'
 
     return Clue(id, title, text, tags, source, share_note)
+
+class ClueSet:
+    def __init__(self, kind, name):
+        self.kind = kind
+        self.name = name
+        self.clues = []
+
+    def add_clue(self, clue):
+        self.clues.append(clue)
+
+    @property
+    def markdown(self):
+        clues = '\n'.join(sorted(f'- [[{clue.name}]]' for clue in self.clues))
+        return f'''
+### {self.kind} - {self.name}
+
+{clues}
+'''
