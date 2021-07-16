@@ -84,5 +84,5 @@ def test_parse_with_no_meta_info():
     assert clue.share_note is None
 
 def test_name():
-    clue = Clue(42, "Foo*#Bar\"Baz\\Quux/Foo<Bar>Baz:Quux|Foo?Bar", '', [], None, None)
-    assert '42 - Foo - Bar - Baz - Quux - Foo - Bar - Baz - Quux - Foo - Bar' == clue.name
+    clue = Clue(42, "Foo*#Bar\"Baz\\Quux/Foo<Bar>Baz:Quux|Foo?Bar>", '', [], None, None)
+    assert '42 - Foo - Bar - Baz - Quux - Foo - Bar - Baz - Quux - Foo - Bar -' == clue.name

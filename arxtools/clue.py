@@ -29,7 +29,7 @@ class Clue:
     @property
     def name(self):
         base = f'{self.id} - {self.title}'
-        return re.sub(r'\*|\"|\\|/|<|>|:|\||\?', ' - ', base).replace('#','')
+        return re.sub(r'\*|\"|\\|/|<|>|:|\||\?', ' - ', base).replace('#','').strip()
 
     @property
     def markdown(self):
