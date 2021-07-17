@@ -105,9 +105,10 @@ class ClueSet:
 
     @property
     def markdown(self):
-        clues = '\n'.join(sorted(f'- [[{clue.name}]]' for clue in self.clues))
+        clues = sorted(self.clues, key=lambda c: c.id)
+        clue_links = '\n'.join(f'- [[{clue.name}]]' for clue in clues)
         return f'''
 ### {self.kind} - {self.name}
 
-{clues}
+{clue_links}
 '''
