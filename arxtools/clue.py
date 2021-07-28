@@ -74,6 +74,12 @@ def parse_clue(html):
         else:
             text += child.string.strip()
 
+    hasmeta = tds[2].find('div')
+    if not hasmeta:
+        return Clue(id, title, text, [], None, None)
+
+    shinfo = hasmeta.contents[-1]
+
     hastags = tds[2].find('strong')
     if hastags:
         tags = [s.strip() for s in hastags.next_sibling.string.split(', ')]
@@ -82,15 +88,20 @@ def parse_clue(html):
 
     source = None
     share_note = None
-    shinfo = tds[2].find(string=re.compile('This clue was'))
+    shinfo = hasmeta.contents[-1]
     if shinfo:
-        m = re.search('This clue was shared with you by ([a-zA-Z]+)', shinfo)
-        source = m.group(1)
-        m = re.search('who noted: (.*)', shinfo)
+        m = re.search('This clue was shared with you by ([a-zA-Z]+)', str(shinfo))
         if m:
-            share_note = m.group(1).strip()
-    elif tds[2].find(string=re.compile('Your investigation')):
-        source = 'investigation'
+            source = m.group(1)
+            m = re.search('who noted: (.*)', str(shinfo))
+            if m:
+                share_note = m.group(1).strip()
+
+        if tds[2].find(string=re.compile('Your investigation')):
+            source = 'investigation'
+
+        if source is None and 'Clue Tags:' != shinfo.previous_sibling.text.strip():
+            share_note = shinfo.strip()
 
     return Clue(id, title, text, tags, source, share_note)
 

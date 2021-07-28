@@ -69,6 +69,26 @@ def test_parse_investigation_clue():
     assert 'investigation' == clue.source
     assert clue.share_note is None
 
+def test_parse_no_source_share_note():
+    html='''
+<tr>
+  <td valign="top">42</td>
+  <td valign="top"><b>Clue Title</b></td>
+  <td valign="top">
+    Clue Text
+    <div class="well">
+      <br/>&nbsp;<br/>
+      <strong>Clue Tags: </strong>foo, bar, baz
+      <br/>&nbsp;<br/>
+      Share Note
+    </div>
+  </td>
+</tr>
+'''
+    clue = parse_clue(html)
+    assert None == clue.source
+    assert 'Share Note' == clue.share_note
+
 def test_parse_with_no_meta_info():
     html='''
 <tr>
