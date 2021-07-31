@@ -21,23 +21,34 @@ def get_character_info(name):
 
 @cli.command("import")
 @click.argument('name')
-def import(name):
+def _import(name):
     info = get_character_info(name)
     username = info['username']
     password = info['password']
 
-    click.echo(f'Fetching clues for {username}.', err=True)
     clues = fetch_clues(username, password)
-    click.echo(json.dumps(clues))
+    click.echo(json.dumps([c.to_dict() for c in clues]))
 
 @cli.command("export")
 @click.argument('name')
-def export(name):
+def _export(name):
     info = get_character_info(name)
     directory = info['directory']
 
-    click.echo("Exporting to markdown in " + directory)
     clues = [Clue.from_dict(c) for c in json.load(sys.stdin)]
+    export_clues(clues, directory)
+
+@cli.command('update')
+@click.argument('name')
+def _update(name):
+    info = get_character_info(name)
+    username = info['username']
+    password = info['password']
+    directory = info['directory']
+
+    click.echo(f'Fetching clues for {username}...', err=True)
+    clues = fetch_clues(username, password)
+    click.echo(f'Exporting to markdown in {directory}...', err=True)
     export_clues(clues, directory)
 
 if __name__ == '__main__':

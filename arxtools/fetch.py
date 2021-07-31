@@ -36,7 +36,7 @@ def fetch_clues(username, password):
             if 'danger' in cls:
                 continue
             clue = parse_clue(row.html)
-            clues.append(clue.to_dict())
+            clues.append(clue)
     return clues
 
 
