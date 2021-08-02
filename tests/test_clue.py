@@ -1,5 +1,5 @@
 from arxtools.clue import Clue, parse_clue
-
+import pytest
 
 def test_parse_shared_clue_with_note():
     html='''
@@ -88,6 +88,54 @@ def test_parse_no_source_share_note():
     clue = parse_clue(html)
     assert None == clue.source
     assert 'Share Note' == clue.share_note
+
+def test_parse_multi_line_share_note():
+    html='''
+<tr>
+  <td valign="top">42</td>
+  <td valign="top"><b>Clue Title</b></td>
+  <td valign="top">
+    Clue Text
+    <div class="well">
+      <br/>&nbsp;<br/>
+      <strong>Clue Tags: </strong>foo, bar, baz
+      <br/>&nbsp;<br/>
+      This clue was shared with you by Alice, who noted: Clue Share Note
+      <br>
+      <br>
+      More Share Note
+      <br>
+      <br>
+    </div>
+  </td>
+</tr>
+'''
+    clue = parse_clue(html)
+    assert 'Alice' == clue.source
+    assert 'Clue Share Note\n\nMore Share Note' == clue.share_note
+
+def test_parse_multi_line_share_note_no_tags():
+    html='''
+<tr>
+  <td valign="top">42</td>
+  <td valign="top"><b>Clue Title</b></td>
+  <td valign="top">
+    Clue Text
+    <div class="well">
+      <br/>&nbsp;<br/>
+      This clue was shared with you by Alice, who noted: Clue Share Note
+      <br>
+      <br>
+      More Share Note
+      <br>
+      <br>
+    </div>
+  </td>
+</tr>
+'''
+    clue = parse_clue(html)
+    assert 'Alice' == clue.source
+    assert 'Clue Share Note\n\nMore Share Note' == clue.share_note
 
 def test_parse_with_no_meta_info():
     html='''

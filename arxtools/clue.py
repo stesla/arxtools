@@ -58,7 +58,7 @@ Tags: {taglist}
 '''
 
 def parse_clue(html):
-    soup = BeautifulSoup(html, 'html.parser')
+    soup = BeautifulSoup(html, 'lxml')
     tds = soup.select('td')
 
     id = int(tds[0].string)
@@ -83,27 +83,46 @@ def parse_clue(html):
     hastags = tds[2].find('strong')
     if hastags:
         tags = [s.strip() for s in hastags.next_sibling.string.split(', ')]
+        shinfo = _parse_shinfo_with_clue(hasmeta)
     else:
         tags = []
+        shinfo = _parse_shinfo_without_clue(hasmeta)
 
     source = None
     share_note = None
-    shinfo = hasmeta.contents[-1]
     if shinfo:
         m = re.search('This clue was shared with you by ([a-zA-Z]+)', str(shinfo))
         if m:
             source = m.group(1)
-            m = re.search('who noted: (.*)', str(shinfo))
+            m = re.search('who noted: (.*)', str(shinfo), re.S)
             if m:
                 share_note = m.group(1).strip()
 
         if tds[2].find(string=re.compile('Your investigation')):
             source = 'investigation'
 
-        if source is None and 'Clue Tags:' != shinfo.previous_sibling.text.strip():
+        if source is None:
             share_note = shinfo.strip()
 
     return Clue(id, title, text, tags, source, share_note)
+
+def _parse_shinfo(node):
+    result = ''
+    while node:
+        if 'br' == node.name:
+            result += '\n'
+        else:
+            result += str(node.string).strip()
+        node = node.next_sibling
+    return result
+
+def _parse_shinfo_with_clue(meta):
+    node = meta.find('strong').next_sibling.next_sibling
+    return _parse_shinfo(node)
+
+def _parse_shinfo_without_clue(meta):
+    node = meta.contents[0]
+    return _parse_shinfo(node)
 
 class ClueSet:
     def __init__(self, kind, name):
